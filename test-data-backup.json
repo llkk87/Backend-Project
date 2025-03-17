@@ -134,24 +134,6 @@
             "openingHour": "營業中, 結束營業時間：19:00",
             "lat": 22.27943411,
             "lng": 114.1879389
-        },
-        {
-            "id": 16,
-            "region": "test",
-            "shopname": "test shop",
-            "address": "test test 地下",
-            "openingHour": "09:30 - 19:30 (星期一至五), 09:30 - 18:30 (星期六), 休息 (星期日及公眾假期)",
-            "lat": 22.28600339,
-            "lng": 114.15075
-        },
-        {
-            "id": 17,
-            "region": "test",
-            "shopname": "test shop",
-            "address": "test test 地下",
-            "openingHour": "09:30 - 19:30 (星期一至五), 09:30 - 18:30 (星期六), 休息 (星期日及公眾假期)",
-            "lat": 22.28600339,
-            "lng": 114.15075
         }
     ],
     "products": {

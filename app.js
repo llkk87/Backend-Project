@@ -10,7 +10,7 @@ app.use(express.static(`${__dirname}/public`));
 
 // ROUTES
 app.use("/api/v1/shops", shopRouter);
-// app.use("/api/v1/products", productRouter);
+app.use("/api/v1/products", productRouter);
 
 
 module.exports = app;
