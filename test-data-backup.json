@@ -134,108 +134,140 @@
             "openingHour": "營業中, 結束營業時間：19:00",
             "lat": 22.27943411,
             "lng": 114.1879389
+        },
+        {
+            "id": 16,
+            "region": "test",
+            "shopname": "test shop",
+            "address": "test test 地下",
+            "openingHour": "09:30 - 19:30 (星期一至五), 09:30 - 18:30 (星期六), 休息 (星期日及公眾假期)",
+            "lat": 22.28600339,
+            "lng": 114.15075
+        },
+        {
+            "id": 17,
+            "region": "test",
+            "shopname": "test shop",
+            "address": "test test 地下",
+            "openingHour": "09:30 - 19:30 (星期一至五), 09:30 - 18:30 (星期六), 休息 (星期日及公眾假期)",
+            "lat": 22.28600339,
+            "lng": 114.15075
         }
     ],
-    "products": {
-        "light": [
-            {
-                "id": 1,
-                "name": "無線滑鼠",
-                "brand": "羅技",
-                "price": 29.99,
-                "description": "符合人體工學的無線滑鼠，具有可自定義按鈕。",
-                "category": "滑鼠"
-            },
-            {
-                "id": 2,
-                "name": "機械鍵盤",
-                "brand": "雷蛇",
-                "price": 99.99,
-                "description": "具有RGB燈效的機械遊戲鍵盤，擁有觸感開關。",
-                "category": "鍵盤"
-            },
-            {
-                "id": 3,
-                "name": "USB-C集線器",
-                "brand": "安克",
-                "price": 49.99,
-                "description": "多埠USB-C集線器，包含HDMI和USB-A連接埠。",
-                "category": "集線器"
-            },
-            {
-                "id": 4,
-                "name": "網路攝影機",
-                "brand": "羅技",
-                "price": 79.99,
-                "description": "1080p高清網路攝影機，內建麥克風。",
-                "category": "攝影機"
-            },
-            {
-                "id": 5,
-                "name": "便攜式SSD",
-                "brand": "三星",
-                "price": 89.99,
-                "description": "1TB便攜式SSD，擁有快速的讀寫速度。",
-                "category": "儲存"
-            },
-            {
-                "id": 6,
-                "name": "遊戲耳機",
-                "brand": "HyperX",
-                "price": 69.99,
-                "description": "舒適的遊戲耳機，具有環繞聲技術。",
-                "category": "音頻"
-            },
-            {
-                "id": 7,
-                "name": "滑鼠墊",
-                "brand": "SteelSeries",
-                "price": 19.99,
-                "description": "大型滑鼠墊，表面光滑，適合精準操作。",
-                "category": "滑鼠墊"
-            },
-            {
-                "id": 8,
-                "name": "顯示器支架",
-                "brand": "3M",
-                "price": 39.99,
-                "description": "可調整的顯示器支架，提升人體工學。",
-                "category": "家具"
-            },
-            {
-                "id": 9,
-                "name": "筆記型電腦散熱墊",
-                "brand": "Targus",
-                "price": 34.99,
-                "description": "具有雙風扇的散熱墊，提供更好的氣流。",
-                "category": "散熱"
-            },
-            {
-                "id": 10,
-                "name": "浪湧保護器",
-                "brand": "Belkin",
-                "price": 24.99,
-                "description": "具有USB充電埠的浪湧保護器。",
-                "category": "電源"
-            }
-        ],
-        "television": [
-            {
-                "id": 1,
-                "name": "tv1",
-                "brand": "羅技",
-                "price": 29.99,
-                "description": "符合人體工學的無線滑鼠，具有可自定義按鈕。",
-                "category": "滑鼠"
-            },
-            {
-                "id": 2,
-                "name": "tv2",
-                "brand": "雷蛇",
-                "price": 99.99,
-                "description": "具有RGB燈效的機械遊戲鍵盤，擁有觸感開關。",
-                "category": "鍵盤"
-            }
-        ]
-    }
+    "products": [
+        {
+            "id": 1,
+            "name": "無線滑鼠",
+            "brand": "羅技",
+            "price": 29.99,
+            "description": "符合人體工學的無線滑鼠，具有可自定義按鈕。",
+            "category": "computer"
+        },
+        {
+            "id": 2,
+            "name": "機械鍵盤",
+            "brand": "雷蛇",
+            "price": 99.99,
+            "description": "具有RGB燈效的機械遊戲鍵盤，擁有觸感開關。",
+            "category": "computer"
+        },
+        {
+            "id": 3,
+            "name": "USB-C集線器",
+            "brand": "安克",
+            "price": 49.99,
+            "description": "多埠USB-C集線器，包含HDMI和USB-A連接埠。",
+            "category": "computer"
+        },
+        {
+            "id": 4,
+            "name": "網路攝影機",
+            "brand": "羅技",
+            "price": 79.99,
+            "description": "1080p高清網路攝影機，內建麥克風。",
+            "category": "computer"
+        },
+        {
+            "id": 5,
+            "name": "便攜式SSD",
+            "brand": "三星",
+            "price": 89.99,
+            "description": "1TB便攜式SSD，擁有快速的讀寫速度。",
+            "category": "computer"
+        },
+        {
+            "id": 6,
+            "name": "遊戲耳機",
+            "brand": "HyperX",
+            "price": 69.99,
+            "description": "舒適的遊戲耳機，具有環繞聲技術。",
+            "category": "computer"
+        },
+        {
+            "id": 7,
+            "name": "滑鼠墊",
+            "brand": "SteelSeries",
+            "price": 19.99,
+            "description": "大型滑鼠墊，表面光滑，適合精準操作。",
+            "category": "computer"
+        },
+        {
+            "id": 8,
+            "name": "顯示器支架",
+            "brand": "3M",
+            "price": 39.99,
+            "description": "可調整的顯示器支架，提升人體工學。",
+            "category": "computer"
+        },
+        {
+            "id": 9,
+            "name": "筆記型電腦散熱墊",
+            "brand": "Targus",
+            "price": 34.99,
+            "description": "具有雙風扇的散熱墊，提供更好的氣流。",
+            "category": "computer"
+        },
+        {
+            "id": 10,
+            "name": "浪湧保護器",
+            "brand": "Belkin",
+            "price": 24.99,
+            "description": "具有USB充電埠的浪湧保護器。",
+            "category": "computer"
+        },
+        {
+            "id": 11,
+            "name": "tv1",
+            "brand": "羅技",
+            "price": 29.99,
+            "description": "符合人體工學的無線滑鼠，具有可自定義按鈕。",
+            "category": "television"
+        },
+        {
+            "id": 12,
+            "name": "tv2",
+            "brand": "雷蛇",
+            "price": 99.99,
+            "description": "具有RGB燈效的機械遊戲鍵盤，擁有觸感開關。",
+            "category": "television"
+        },
+        {
+            "id": 13,
+            "name": "Paul Chan散熱墊",
+            "brand": "Targus",
+            "price": 344444.99,
+            "description": "具有Paul Chan的散熱墊，提供更好的氣流。",
+            "category": "computer"
+        }
+    ],
+    "questions_and_answers": [
+        {
+            "question": "你們安裝哪些類型的電子產品？",
+            "answer": "我們安裝多種電子產品，包括電視、燈飾和智慧家居設備。"
+        },
+        {
+            "question": "我該如何安排安裝？",
+            "answer": "您可以透過訪問我們的合作商店或聯繫客戶服務來安排安裝。"
+        }
+    ]
 }

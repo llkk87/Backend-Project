@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.route("/").get(productController.getAllProducts).post(productController.createProduct)
 router.route("/:id").get(productController.getProduct).patch(productController.updateProduct).delete(productController.deleteProduct)
-router.route("/search/")
-
-
+router.route("/search/:name").get(productController.getProdByName)
+router.route("/search/:name/:price").get(productController.getProdByNamePrice)
 module.exports = router;
