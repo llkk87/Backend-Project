@@ -23,7 +23,7 @@
             "region": "中環",
             "shopname": "Foresoon 科訊電腦",
             "address": "中環德輔道中102號, Hong Kong, Hong Kong",
-            "openingHour": "",
+            "openingHour": "營業中",
             "lat": 22.2850182,
             "lng": 114.1552288
         },
@@ -32,7 +32,7 @@
             "region": "中環",
             "shopname": "Polly Computer Limited 新利電腦有限公司",
             "address": "香港中環永樂街5號, 2A&2B舖",
-            "openingHour": "",
+            "openingHour": "營業中",
             "lat": 22.28586204,
             "lng": 114.1537589
         },
@@ -50,7 +50,7 @@
             "region": "中環",
             "shopname": "豐澤 Fortress (萬邦行店)",
             "address": "中環皇后大道中 33 號萬邦行低層地下 1-2 號舖",
-            "openingHour": "",
+            "openingHour": "closed bitch",
             "lat": 22.28241471,
             "lng": 114.1566053
         },
@@ -59,7 +59,7 @@
             "region": "上環",
             "shopname": "實體店舖",
             "address": "香港上環永樂街1-3號世瑛大廈地下3號鋪",
-            "openingHour": "",
+            "openingHour": "營業中",
             "lat": 22.28589295,
             "lng": 114.153728
         },
@@ -68,7 +68,7 @@
             "region": "中環",
             "shopname": "金電腦用品",
             "address": "香港中環德輔道中102號詹氐商業大廈地下",
-            "openingHour": "",
+            "openingHour": "營業中",
             "lat": 22.285078,
             "lng": 114.155315
         },
@@ -138,7 +138,7 @@
         {
             "id": 16,
             "region": "test",
-            "shopname": "test shop",
+            "shopname": "test shop one",
             "address": "test test 地下",
             "openingHour": "09:30 - 19:30 (星期一至五), 09:30 - 18:30 (星期六), 休息 (星期日及公眾假期)",
             "lat": 22.28600339,
@@ -147,7 +147,7 @@
         {
             "id": 17,
             "region": "test",
-            "shopname": "test shop",
+            "shopname": "test shop two",
             "address": "test test 地下",
             "openingHour": "09:30 - 19:30 (星期一至五), 09:30 - 18:30 (星期六), 休息 (星期日及公眾假期)",
             "lat": 22.28600339,
