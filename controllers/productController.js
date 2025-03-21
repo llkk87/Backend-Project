@@ -111,7 +111,10 @@ exports.getProdByName = async (req, res) => {
   try {
     const name = req.params.name;
     console.log("getProdName", name);
-    const product = products.find(el => el.name == name);
+    // const product = products.find(el => el.name == name);
+    const product = products.filter(el => {
+      return el.name.toLowerCase().includes(name);
+    });
 
     res.status(200).json({
       status: "success",
@@ -131,7 +134,7 @@ exports.getProdByNamePrice = async (req, res) => {
   try {
     const name = req.params.name;
     const price = Number(req.params.price);
-    console.log("getProdName", name);
+    console.log("getProdNamePrice", name, pr);
     const product = products.find(el => el.name == name && el.price == price);
 
     res.status(200).json({
