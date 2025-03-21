@@ -78,6 +78,22 @@ bot.onText(/\/search (.+)/, function (msg, match) {
     printoutProduct(result, bot, fromId, resp);
 });
 
+bot.onText(/\/searchrange (.+)/, function (msg, match) {
+    console.log("match:", match);
+    let fromId = msg.from.id;
+    let resp = "";
+    let input = match[1].toLowerCase();
+    let parts = input.trim().split(/\s+/);
+    let keyword = parts.slice(0, -2).join(" ");
+    let minPrice = parts[parts.length - 2];
+    let maxPrice = parts[parts.length - 1]
+    let result = productData.filter((product) => {
+        return product.name.toLowerCase().includes(input);
+    });
+    console.log("result:", result);
+    printoutProduct(result, bot, fromId, resp);
+});
+
 bot.onText(/\/question (.+)/, function (msg, match) {
     console.log("match:", match);
     let fromId = msg.from.id;
