@@ -111,7 +111,9 @@ exports.getQuestionByKeyword = async (req, res) => {
     try {
         const keyword = req.params.keyword;
         console.log("getQuestionByKeyword", keyword);
-        const question = questions.find(el => el.question == keyword || el.answer == keyword);
+        const question = questions.filter((question) => {
+            return question.question.toLowerCase().includes(keyword) || question.answer.toLowerCase().includes(keyword);
+        });
 
         res.status(200).json({
             status: "success",

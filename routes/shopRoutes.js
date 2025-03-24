@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.route("/").get(shopController.getAllShops).post(shopController.createShop)
 router.route("/:id").get(shopController.getShop).patch(shopController.updateShop).delete(shopController.deleteShop)
+router.route("/search/:keyword").get(shopController.getShopByKeyword)
 
 
 module.exports = router;

@@ -40,6 +40,28 @@ exports.getShop = async (req, res) => {
   }
 };
 
+exports.getShopByKeyword = async (req, res) => {
+  try {
+    const keyword = req.params.keyword.toLowerCase();
+    console.log("getShopbyKeyword:", keyword);
+    const shop = shops.filter((el) => {
+      return el.shopname.toLowerCase().includes(keyword) || el.region.toLowerCase().includes(keyword) || el.address.toLowerCase().includes(keyword);
+  });
+
+    res.status(200).json({
+      status: "success",
+      message: {
+        shop
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err
+    });
+  }
+};
+
 exports.createShop = async (req, res) => {
   const newId = shops[shops.length - 1].id + 1;
   const newShop = Object.assign({ id: newId }, req.body);

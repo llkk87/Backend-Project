@@ -103,7 +103,7 @@ bot.onText(/\/search (.+)/, function (msg, match) {
     printoutProduct(result, bot, fromId, resp);
 });
 
-bot.onText(/\/searchrange (.+)/, function (msg, match) {
+bot.onText(/\/searhprice (.+)/, function (msg, match) {
     console.log("match:", match);
     let fromId = msg.from.id;
     let resp = "";
@@ -118,7 +118,7 @@ bot.onText(/\/searchrange (.+)/, function (msg, match) {
     // }
 
     let result = productData.filter((el) => {
-        return el.name.toLowerCase().includes(keyword) && minPrice < el.price && maxPrice > el.price; 
+        return el.name.toLowerCase().includes(keyword) && minPrice <= el.price && maxPrice >= el.price; 
     });
     console.log("result:", result);
     printoutProduct(result, bot, fromId, resp);
@@ -133,7 +133,7 @@ bot.onText(/\/question (.+)?/, function (msg, match) {
     let result;
 
     if (input === "") {
-        result === questionData;
+        result = questionData;
     } else {
         result = questionData.filter((question) => {
             return question.question.toLowerCase().includes(input) || question.answer.toLowerCase().includes(input);

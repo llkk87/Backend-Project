@@ -109,7 +109,7 @@ exports.deleteProduct = async (req, res) => { // http 204 No Content
 
 exports.getProdByName = async (req, res) => {
   try {
-    const name = req.params.name;
+    const name = req.params.name.toLowerCase();
     console.log("getProdName", name);
     // const product = products.find(el => el.name == name);
     const product = products.filter(el => {
@@ -132,10 +132,15 @@ exports.getProdByName = async (req, res) => {
 
 exports.getProdByNamePrice = async (req, res) => {
   try {
-    const name = req.params.name;
-    const price = Number(req.params.price);
-    console.log("getProdNamePrice", name, pr);
-    const product = products.find(el => el.name == name && el.price == price);
+    const name = req.params.name.toLowerCase();
+    const minPrice = Number(req.params.minprice);
+    const maxPrice = Number(req.params.maxprice);
+
+    console.log("getProdNamePrice", name, minPrice, maxPrice);
+    const product = products.filter((el) => {
+      return el.name.toLowerCase().includes(name) && minPrice <= el.price && maxPrice >= el.price; 
+  });
+
 
     res.status(200).json({
       status: "success",
