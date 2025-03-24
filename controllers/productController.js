@@ -1,12 +1,31 @@
-const fs = require("fs");
-
-const data = JSON.parse(fs.readFileSync(`${__dirname}/../test-data.json`));
-const products = data.products;
+const Product = require("./../models/productModel");
 
 exports.getAllProducts = async (req, res) => {
   try {
+    console.log("req.query:", req.query); // ?price[gte]=50
+    // BUILD QUERY
+    // 1) Filtering
+    const queryObj = { ...req.query } // directly assign req.query is just assign a reference not the object itself
+    const exculdedFields = ["page", "sort", "limit", "fields"];
+    exculdedFields.forEach(el => delete queryObj[el]);
+
+    // 2) Advanced filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`); // \b \b is exact same word. Without /g only replace the first one
+    console.log("query after adding $ for mongogb:", JSON.parse(queryStr));
+
+    // mongodb : { name: "ssd", price: {$gte: 50} }
+    // url input ?price[gte]=5 : { name: "ssd", duration: {gte: '50'} }
+    // gte, gt, lte, lt
+
+    const query = Product.find(JSON.parse(queryStr)); // if directly put object method in here, the "await" would make it not working. Solution is move the await to other var
+
+    // EXCUTE QUERY
+    const products = await query;
+
+    // SEND RESPONSE
     res.status(200).json({
-      staus: "success",
+      status: "success",
       results: products.length,
       data: {
         products
@@ -22,9 +41,7 @@ exports.getAllProducts = async (req, res) => {
 
 exports.getProduct = async (req, res) => {
   try {
-    const id = Number(req.params.id);
-    console.log("getProduct", id);
-    const product = products.find(el => el.id == id);
+    const product = await Product.findById(req.params.id);
 
     res.status(200).json({
       status: "success",
@@ -41,117 +58,103 @@ exports.getProduct = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const newId = products[products.length - 1].id + 1;
-  const newProduct = Object.assign({ id: newId }, req.body);
-  data.products.push(newProduct);
-  console.log(data.products);
+  try {
+    // const newProduct  = new Product({});
+    // newProduct .save();
 
-  fs.writeFile(`${__dirname}/../test-data.json`, JSON.stringify(data), err => {
+    const newProduct = await Product.create(req.body)
+
     res.status(201).json({
       status: "success",
       data: {
         product: newProduct
       }
     });
-  });
-};
-
-exports.updateProduct = async (req, res) => { // http 200 OK
-  const id = Number(req.params.id);
-  console.log("updateProduct", id);
-  const product = products.find(el => el.id == id);
-
-  if (!product) {
-    return res.status(404).json({
+  } catch (err) {
+    res.status(400).json({
       status: "fail",
-      message: ("product not found")
+      message: err
     });
   }
+};
 
-  const updates = req.body;
-  for (let key in updates) {
-    if (product[key] !== undefined) { // product.hasOwnProperty(key)
-      product[key] = updates[key]
-    }
+exports.updateProduct = async (req, res) => {
+  try { // findByIdAndUpdate works for PATCH but not POST 
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { // pls read the documentation. runValidators check price is number not string
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json({ // before es6 tour: tour, es6 tour
+      status: "success", // http 200 OK
+      data: {
+        product
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err
+    });
   }
-  console.log(products)
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      product: product
-    }
-  });
-
-}; // not yet written into test-data.json
+};
 
 exports.deleteProduct = async (req, res) => { // http 204 No Content
-  const id = Number(req.params.id);
-  console.log("deleteProduct", id);
-  const index = products.findIndex(el => el.id == id);
+  await Product.findOneAndDelete(req.params.id);
 
-  if (index === -1) {
-    return res.status(404).json({
-      status: "fail",
-      message: ("product not found")
-    });
-  }
-
-  products.splice(index, 1);
-  console.log(products)
-
-  res.status(204).json({
-    status: "success",
-    message: "product successfully deleted",
-    data: null
-  });
-}; // not yet written into test-data.json
-
-exports.getProdByName = async (req, res) => {
   try {
-    const name = req.params.name.toLowerCase();
-    console.log("getProdName", name);
-    // const product = products.find(el => el.name == name);
-    const product = products.filter(el => {
-      return el.name.toLowerCase().includes(name);
+    res.status(204).json({
+        status: "success",
+        data: "null"
     });
-
-    res.status(200).json({
-      status: "success",
-      message: {
-        product
-      }
-    });
-  } catch (err) {
+} catch (err) {
     res.status(404).json({
-      status: "fail",
-      message: err
+        status: "fail",
+        message: err
     });
-  }
+}
 };
 
-exports.getProdByNamePrice = async (req, res) => {
-  try {
-    const name = req.params.name.toLowerCase();
-    const minPrice = Number(req.params.minprice);
-    const maxPrice = Number(req.params.maxprice);
+// exports.getProdByName = async (req, res) => {
+//   try {
+//     const product = await Product.findOne({name: req.params.name});
 
-    console.log("getProdNamePrice", name, minPrice, maxPrice);
-    const product = products.filter((el) => {
-      return el.name.toLowerCase().includes(name) && minPrice <= el.price && maxPrice >= el.price; 
-  });
+//     res.status(200).json({
+//       status: "success",
+//       message: {
+//         product
+//       }
+//     });
+//   } catch (err) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: err
+//     });
+//   }
+// };
+
+// exports.getProdByNamePrice = async (req, res) => {
+//   try {
+//     const name = req.params.name.toLowerCase();
+//     const minPrice = Number(req.params.minprice);
+//     const maxPrice = Number(req.params.maxprice);
+
+//     console.log("getProdNamePrice", name, minPrice, maxPrice);
+//     const product = products.filter((el) => {
+//       return el.name.toLowerCase().includes(name) && minPrice <= el.price && maxPrice >= el.price;
+//     });
 
 
-    res.status(200).json({
-      status: "success",
-      message: {
-        product
-      }
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err
-    });
-  }
-};
+//     res.status(200).json({
+//       status: "success",
+//       message: {
+//         product
+//       }
+//     });
+//   } catch (err) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: err
+//     });
+//   }
+// };
