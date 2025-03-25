@@ -2,7 +2,7 @@ const Product = require("./../models/productModel");
 
 exports.getAllProducts = async (req, res) => {
   try {
-    console.log("req.query:", req.query); // ?price[gte]=50
+    // console.log("req.query:", req.query); // ?price[gte]=50
     // BUILD QUERY
     // 1) Filtering
     const queryObj = { ...req.query } // directly assign req.query is just assign a reference not the object itself
@@ -12,13 +12,31 @@ exports.getAllProducts = async (req, res) => {
     // 2) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`); // \b \b is exact same word. Without /g only replace the first one
-    console.log("query after adding $ for mongogb:", JSON.parse(queryStr));
+    let queryObj2 = JSON.parse(queryStr);
+    console.log("query after adding $ for mongogb:", queryObj2);
 
     // mongodb : { name: "ssd", price: {$gte: 50} }
     // url input ?price[gte]=5 : { name: "ssd", duration: {gte: '50'} }
     // gte, gt, lte, lt
 
-    const query = Product.find(JSON.parse(queryStr)); // if directly put object method in here, the "await" would make it not working. Solution is move the await to other var
+    // if directly put object method in here, the "await" would make it not working. Solution is move the await to other var
+    // const query = Product.find(JSON.parse(queryStr));
+
+    let keyword = queryObj2.keyword;
+    
+    const query = Product.find({
+      $and: [
+        {
+          $or: [
+            { name: {$regex: keyword, $options: "i"} }, // case-insentive
+            { brand: {$regex: keyword, $options: "i"} },
+            { description: {$regex: keyword, $options: "i"} },
+            { category: {$regex: keyword, $options: "i"} }
+          ]
+        },
+        { price: queryObj2.price }
+      ]
+    });
 
     // EXCUTE QUERY
     const products = await query;
@@ -41,12 +59,38 @@ exports.getAllProducts = async (req, res) => {
 
 exports.getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const products = await Product.findById(req.params.id);
 
     res.status(200).json({
       status: "success",
-      message: {
-        product
+      data: {
+        products
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err
+    });
+  }
+};
+
+exports.getProductsByKeyword = async (req, res) => {
+  try {
+    const keyword = req.params.keyword;
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } }, // case-insensitive
+        { brand: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+        { category: { $regex: keyword, $options: "i" } }
+      ]
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        products
       }
     });
   } catch (err) {
@@ -67,7 +111,7 @@ exports.createProduct = async (req, res) => {
     res.status(201).json({
       status: "success",
       data: {
-        product: newProduct
+        products: newProduct
       }
     });
   } catch (err) {
@@ -80,7 +124,7 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try { // findByIdAndUpdate works for PATCH but not POST 
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { // pls read the documentation. runValidators check price is number not string
+    const products = await Product.findByIdAndUpdate(req.params.id, req.body, { // pls read the documentation. runValidators check price is number not string
       new: true,
       runValidators: true
     });
@@ -88,7 +132,7 @@ exports.updateProduct = async (req, res) => {
     res.status(200).json({ // before es6 product: product, es6 product
       status: "success", // http 200 OK
       data: {
-        product
+        products
       }
     });
   } catch (err) {

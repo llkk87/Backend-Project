@@ -1,7 +1,7 @@
 const TelegramBot = require("node-telegram-bot-api");
-// const getData = require("./../fetch-data.js");
 const fs = require("fs");
 const getData = JSON.parse(fs.readFileSync(`${__dirname}/../test-data.json`));
+const { getJSON } = require("./../data");
 
 console.log("Telegram Bot Server Start");
 let token = "7449617212:AAHKzweWq1V2DekH1fWh_AiQaB1LI02w0AI";
@@ -31,10 +31,6 @@ function haversineDistance(coords1, coords2, isMiles = false) {
 
     return distance;
 }
-
-let shopData = getData.shops;
-let productData = getData.products;
-let questionData = getData.questions;
 
 
 function printoutShop(shop, bot, fromId, resp) {
@@ -91,19 +87,20 @@ bot.onText(/\/start/, function (msg) {
 //     }=>
 // });
 
-bot.onText(/\/search (.+)/, function (msg, match) {
-    console.log("match:", match);
+bot.onText(/\/product (.+)/, async function (msg, match) {
     let fromId = msg.from.id;
     let resp = "";
     let input = match[1].toLowerCase();
-    let result = productData.filter((el) => {
-        return el.name.toLowerCase().includes(input);
-    });
-    console.log("result:", result);
-    printoutProduct(result, bot, fromId, resp);
+    console.log("search input:", input)
+
+    let getProductsByKeyword = await getJSON(`http://localhost:8000/api/products/search/${input}`);
+    let productsData = getProductsByKeyword.data.data.products;
+    console.log(productsData);
+
+    printoutProduct(productsData, bot, fromId, resp);
 });
 
-bot.onText(/\/searhprice (.+)/, function (msg, match) {
+bot.onText(/\/productprice (.+)/, async function (msg, match) {
     console.log("match:", match);
     let fromId = msg.from.id;
     let resp = "";
@@ -113,55 +110,37 @@ bot.onText(/\/searhprice (.+)/, function (msg, match) {
     let minPrice = parts[parts.length - 2];
     let maxPrice = parts[parts.length - 1];
 
+    let getAllProducts = await getJSON(`http://localhost:8000/api/products?keyword=${keyword}&price[gte]=${minPrice}&price[lte]=${maxPrice}`);
+    let productData = getAllProducts.data.data.products;
+
     // if (isNaN(minPrice) || isNaN(maxPrice) || minPrice < 0 || maxPrice < 0) {
     //     return null;
     // }
-
-    let result = productData.filter((el) => {
-        return el.name.toLowerCase().includes(keyword) && minPrice <= el.price && maxPrice >= el.price; 
-    });
-    console.log("result:", result);
-    printoutProduct(result, bot, fromId, resp);
+    printoutProduct(productData, bot, fromId, resp);
 });
 
 
-bot.onText(/\/question (.+)?/, function (msg, match) {
-    console.log("match:", match);
+bot.onText(/\/question (.+)?/, async function (msg, match) {
     let fromId = msg.from.id;
     let resp = "";
-    let input = match[1] ? match[1].toLowerCase() : "";
-    let result;
+    let input = match[1].toLowerCase();
+    console.log("question input:", input);
 
-    if (input === "") {
-        result = questionData;
-    } else {
-        result = questionData.filter((question) => {
-            return question.question.toLowerCase().includes(input) || question.answer.toLowerCase().includes(input);
-        });
-    }
+    let getQuestionsByKeyword = await getJSON(`http://localhost:8000/api/questions/search/${input}`);
+    let questionData = getQuestionsByKeyword.data.data.questions
+    console.log("questionData:", questionData);
 
-    console.log("result:", result);
-    printoutQuestion(result, bot, fromId, resp);
-}); // not working yet
+    printoutQuestion(questionData, bot, fromId, resp);
+});
 
 bot.on('location', async (msg) => {
     try {
         let fromId = msg.from.id;
         let resp = "";
-        const coords1 = { latitude: msg.location.latitude, longitude: msg.location.longitude };
-        let coords2 = { latitude: 34.0522, longitude: -118.2437 };
 
-        let result = shopData.filter((shop) => {
-            coords2 = { latitude: shop.lat, longitude: shop.lng }; // beware uppercase
-            console.log("haversineDistance", haversineDistance(coords1, coords2));
-            return haversineDistance(coords1, coords2) <= 2; // return the result shoter than 2km
-        });
+        let getNearbyShops = await getJSON(`http://localhost:8000/api/shops/locate/${msg.location.latitude}/${msg.location.longitude}/0.2`);
 
-        if (result.length > 0) {
-            printoutShop(result, bot, fromId, resp);
-        } else {
-            bot.sendMessage(fromId, "No nearby shop");
-        }
+         getNearbyShops.data.data != undefined ? printoutShop(getNearbyShops.data.data.shops, bot, fromId, resp) :  bot.sendMessage(fromId, getNearbyShops.data.message);
 
     } catch (err) {
         console.log("get location error:", err);

@@ -40,7 +40,7 @@ exports.getQuestion = async (req, res) => {
 exports.getQuestionByKeyword = async (req, res) => {
     try {
         const keyword = req.params.keyword;
-        const question = await Question.find({ // this "question" is the collection name
+        const questions = await Question.find({ // this "question" is the collection name
             $or: [
                 { question: { $regex: keyword, $options: "i" } }, // this "question" is the key namew
                 { answer: { $regex: keyword, $options: "i" } }
@@ -49,8 +49,8 @@ exports.getQuestionByKeyword = async (req, res) => {
 
         res.status(200).json({
             status: "success",
-            message: {
-                question
+            data: {
+                questions
             }
         });
     } catch (err) {

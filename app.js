@@ -10,9 +10,9 @@ app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
 // ROUTES
-app.use("/api/shop", shopRouter);
-app.use("/api/product", productRouter);
-app.use("/api/question", questionRouter);
+app.use("/api/shops", shopRouter);
+app.use("/api/products", productRouter);
+app.use("/api/questions", questionRouter);
 
 
 module.exports = app;
