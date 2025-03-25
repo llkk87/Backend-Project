@@ -62,7 +62,7 @@ exports.createProduct = async (req, res) => {
     // const newProduct  = new Product({});
     // newProduct .save();
 
-    const newProduct = await Product.create(req.body)
+    const newProduct = await Product.create(req.body);
 
     res.status(201).json({
       status: "success",
@@ -85,7 +85,7 @@ exports.updateProduct = async (req, res) => {
       runValidators: true
     });
 
-    res.status(200).json({ // before es6 tour: tour, es6 tour
+    res.status(200).json({ // before es6 product: product, es6 product
       status: "success", // http 200 OK
       data: {
         product
