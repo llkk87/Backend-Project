@@ -4,39 +4,55 @@ exports.getAllProducts = async (req, res) => {
   try {
     // console.log("req.query:", req.query); // ?price[gte]=50
     // BUILD QUERY
-    // 1) Filtering
-    const queryObj = { ...req.query } // directly assign req.query is just assign a reference not the object itself
-    const exculdedFields = ["page", "sort", "limit", "fields"];
-    exculdedFields.forEach(el => delete queryObj[el]);
 
-    // 2) Advanced filtering
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`); // \b \b is exact same word. Without /g only replace the first one
-    let queryObj2 = JSON.parse(queryStr);
-    console.log("query after adding $ for mongogb:", queryObj2);
+    console.log(req.query);
+    let query;
+    if (Object.keys(req.query).length != 0) { // cheeck if object is empty
+      // ** Filtering **
+      const queryObj = { ...req.query } // directly assign req.query is just assign a reference not the object itself
+      const exculdedFields = ["page", "sort", "limit", "fields"];
+      exculdedFields.forEach(el => delete queryObj[el]);
 
-    // mongodb : { name: "ssd", price: {$gte: 50} }
-    // url input ?price[gte]=5 : { name: "ssd", duration: {gte: '50'} }
-    // gte, gt, lte, lt
+      // ** Advanced filtering **
+      let queryStr = JSON.stringify(queryObj);
+      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`); // \b \b is exact same word. Without /g only replace the first one
+      let queryObj2 = JSON.parse(queryStr);
+      console.log("query after adding $ for mongogb:", queryObj2);
 
-    // if directly put object method in here, the "await" would make it not working. Solution is move the await to other var
-    // const query = Product.find(JSON.parse(queryStr));
+      // mongodb : { name: "ssd", price: {$gte: 50} }
+      // url input ?price[gte]=5 : { name: "ssd", duration: {gte: '50'} }
+      // gte, gt, lte, lt
 
-    let keyword = queryObj2.keyword;
-    
-    const query = Product.find({
-      $and: [
-        {
-          $or: [
-            { name: {$regex: keyword, $options: "i"} }, // case-insentive
-            { brand: {$regex: keyword, $options: "i"} },
-            { description: {$regex: keyword, $options: "i"} },
-            { category: {$regex: keyword, $options: "i"} }
-          ]
-        },
-        { price: queryObj2.price }
-      ]
-    });
+      // if directly put object method in here, the "await" would make it not working. Solution is move the await to other var
+      // const query = Product.find(JSON.parse(queryStr));
+
+      let keyword = queryObj2.keyword;
+
+      query = Product.find({
+        $and: [
+          {
+            $or: [
+              { name: { $regex: keyword, $options: "i" } }, // case-insentive
+              { brand: { $regex: keyword, $options: "i" } },
+              { description: { $regex: keyword, $options: "i" } },
+              { category: { $regex: keyword, $options: "i" } }
+            ]
+          },
+          { price: queryObj2.price }
+        ]
+      });
+    } else {
+      query = Product.find();
+    }
+
+
+    // ** Field limiting **
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      query = query.select("-__v")  // everything except __v
+    }
 
     // EXCUTE QUERY
     const products = await query;
@@ -148,15 +164,15 @@ exports.deleteProduct = async (req, res) => { // http 204 No Content
 
   try {
     res.status(204).json({
-        status: "success",
-        data: "null"
+      status: "success",
+      data: "null"
     });
-} catch (err) {
+  } catch (err) {
     res.status(404).json({
-        status: "fail",
-        message: err
+      status: "fail",
+      message: err
     });
-}
+  }
 };
 
 // exports.getProdByName = async (req, res) => {

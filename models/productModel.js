@@ -32,7 +32,8 @@ const productSchema = new mongoose.Schema({
     productImages: [String],
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        select: false
     }
 });
 

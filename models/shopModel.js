@@ -37,7 +37,8 @@ const shopSchema = new mongoose.Schema({
     shopImages: [String],
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
+        select: false
     }
 });
 
