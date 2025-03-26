@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const app = require("./app");
+const cors = require("cors");
+app.use(cors());
 
 const DB = "mongodb://localhost:27017/backend-project";
 
