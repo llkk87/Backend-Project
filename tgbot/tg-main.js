@@ -72,7 +72,11 @@ function printoutQuestion(questions, bot, fromId, resp) {
 
 bot.onText(/\/start/, function (msg) {
     let chatId = msg.chat.id;
-    let resp = "Welcome to my telegram bot";
+    let resp = `Welcome to Electric Shops Telegram Bot.You can access the data from the following command:\n
+        /prdoct Keyword - search products by keyword (eg. /product computer).\n
+        /productprice Keyword minPrice MaxPrice - search products by keyword and price range (eg. /productprice ssd 50 100)\n
+        /question Keyword - search questions by keyword (eg. /question installation).\n
+        You can also share a location to find a nearby electric shops.`;
 
     bot.sendMessage(chatId, resp);
 });
@@ -97,6 +101,7 @@ bot.onText(/\/product (.+)/, async function (msg, match) {
     let productsData = getProductsByKeyword.data.data.products;
     console.log(productsData);
 
+    if (productsData.length === 0) return bot.sendMessage(fromId, "Sorry, no results for your search.");
     printoutProduct(productsData, bot, fromId, resp);
 });
 
@@ -106,17 +111,17 @@ bot.onText(/\/productprice (.+)/, async function (msg, match) {
     let resp = "";
     let input = match[1].toLowerCase();
     let parts = input.trim().split(/\s+/);
+    if (parts.length !== 3) return bot.sendMessage(fromId, "Invalid Input");
     let keyword = parts.slice(0, -2).join(" ");
-    let minPrice = parts[parts.length - 2];
-    let maxPrice = parts[parts.length - 1];
+    let minPrice = Number(parts[parts.length - 2]);
+    let maxPrice = Number(parts[parts.length - 1]);
+    if (minPrice < 0 || maxPrice < 0 ||minPrice > maxPrice || isNaN(minPrice) || isNaN(maxPrice)) return bot.sendMessage(fromId, "Invalid Input");
 
     let getAllProducts = await getJSON(`http://localhost:8000/api/products?keyword=${keyword}&price[gte]=${minPrice}&price[lte]=${maxPrice}`);
-    let productData = getAllProducts.data.data.products;
+    let productsData = getAllProducts.data.data.products;
 
-    // if (isNaN(minPrice) || isNaN(maxPrice) || minPrice < 0 || maxPrice < 0) {
-    //     return null;
-    // }
-    printoutProduct(productData, bot, fromId, resp);
+    if (productsData.length === 0) return bot.sendMessage(fromId, "Sorry, no results for your search.");
+    printoutProduct(productsData, bot, fromId, resp);
 });
 
 
@@ -125,7 +130,6 @@ bot.onText(/\/question (.+)?/, async function (msg, match) {
     let resp = "";
     let input = match[1].toLowerCase();
     console.log("question input:", input);
-
     let getQuestionsByKeyword = await getJSON(`http://localhost:8000/api/questions/search/${input}`);
     let questionData = getQuestionsByKeyword.data.data.questions
     console.log("questionData:", questionData);

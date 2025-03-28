@@ -1,4 +1,4 @@
-const Shop = require("./../models/shopModel")
+const Shop = require("../models/shopModel")
 
 // Haversine forumla (dirtect distance of two points)
 function haversineDistance(coords1, coords2, isMiles = false) {

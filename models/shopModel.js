@@ -3,7 +3,6 @@ const shopSchema = new mongoose.Schema({
     shopname: {
         type: String,
         required: [true, "A shop must have a shopname"],
-        unique: true
     },
     region: {
         type: String,

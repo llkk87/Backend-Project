@@ -3,19 +3,18 @@ const productSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "A product must have a name"],
-        unique: true
     },
     brand: {
         type: String,
-        required: [true, "A shop must have a brand"]
+        required: [true, "A product must have a brand"]
     },
     price: {
         type: Number,
-        required: [true, "A shop must have a number"]
+        required: [true, "A product must have a price"]
     },
     category: {
         type: String,
-        required: [true, "A shop must have a category"]
+        required: [true, "A product must have a category"]
     },
     description: {
         type: String
