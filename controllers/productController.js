@@ -160,7 +160,7 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => { // http 204 No Content
-  await Product.findOneAndDelete(req.params.id);
+  await Product.findByIdAndDelete(req.params.id);
 
   try {
     res.status(204).json({
